@@ -7,6 +7,7 @@ import Home from "./app/screens/Home";
 import Products from "./app/screens/Products";
 import PlaceOrder from "./app/screens/PlaceOrder";
 import Orders from "./app/screens/Orders";
+import Login from "./app/screens/Login";
 
 const Stack = createNativeStackNavigator();
 
@@ -14,7 +15,12 @@ export default function App() {
   return (
     <NavigationContainer theme={DarkTheme}>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{ headerBackVisible: false }}
+        />
         <Stack.Screen name="Products" component={Products} />
         <Stack.Screen name="Place Order" component={PlaceOrder} />
         <Stack.Screen name="Orders" component={Orders} />
@@ -22,7 +28,6 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

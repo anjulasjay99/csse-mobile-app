@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import axios from "axios";
 import { LOCALHOST } from "@env";
+import * as SecureStore from "expo-secure-store";
 
 function PlaceOrder({ navigation, route }) {
   const [productName, setproductName] = useState("");
@@ -20,9 +21,9 @@ function PlaceOrder({ navigation, route }) {
   const [quantity, setquantity] = useState(0);
   const [ratePrice, setratePrice] = useState(0);
   const [totalPrice, settotalPrice] = useState(0);
-  const [siteName, setsiteName] = useState("SITE 69");
+  const [siteName, setsiteName] = useState("");
   const [supplierId, setsupplierId] = useState("");
-  const [siteId, setsiteId] = useState("ST001");
+  const [siteId, setsiteId] = useState("");
 
   /*
     called when user changes qty.
@@ -98,7 +99,24 @@ function PlaceOrder({ navigation, route }) {
     settotalPrice(0);
   };
 
+  const checkIfLoggedIn = async () => {
+    try {
+      const user = await SecureStore.getItemAsync("user_data");
+      if (user !== undefined) {
+        const data = JSON.parse(user);
+        setsiteId(data.siteId);
+        setsiteName(data.siteName);
+      } else {
+        navigation.navigate("Login");
+      }
+    } catch (error) {
+      console.log(error);
+      showToast("Error! Please try again later.");
+    }
+  };
+
   useEffect(() => {
+    checkIfLoggedIn();
     setproductName(route.params.product.productName);
     setproductId(route.params.product.productId);
     setsupplierId(route.params.product.supplierId);
