@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Button,
+  ScrollView,
+  Pressable,
+} from "react-native";
 
 function ProductCard({ navigation, product }) {
   return (
@@ -21,10 +28,12 @@ function ProductCard({ navigation, product }) {
         <Text style={styles.bodyText}>{product.supplierName}</Text>
       </View>
       <View style={styles.actions}>
-        <Button
-          title="Select"
+        <Pressable
+          style={styles.buttonPrimary}
           onPress={() => navigation.navigate("Place Order", { product })}
-        />
+        >
+          <Text style={styles.buttonPrimaryText}>Select</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -32,10 +41,10 @@ function ProductCard({ navigation, product }) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#eee",
+    backgroundColor: "#fffde7",
     borderStyle: "solid",
-    borderWidth: 1,
-    borderColor: "#000",
+    borderWidth: 2,
+    borderColor: "#fdd835",
     width: "100%",
     padding: 20,
     marginBottom: 10,
@@ -60,6 +69,19 @@ const styles = StyleSheet.create({
   actions: {
     flexDirection: "row",
     justifyContent: "flex-end",
+  },
+  buttonPrimary: {
+    backgroundColor: "#2d2d2d",
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderRadius: 5,
+  },
+  buttonPrimaryText: {
+    color: "#ffd54f",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
 

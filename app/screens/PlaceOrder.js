@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, TextInput, Button, Alert } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  Alert,
+  ScrollView,
+  Pressable,
+} from "react-native";
 import axios from "axios";
 import { LOCALHOST } from "@env";
 
-function PlaceOrder({ route }) {
+function PlaceOrder({ navigation, route }) {
   const [productName, setproductName] = useState("");
   const [productId, setproductId] = useState("");
   const [supplierName, setsupplierName] = useState("");
@@ -15,6 +24,10 @@ function PlaceOrder({ route }) {
   const [supplierId, setsupplierId] = useState("");
   const [siteId, setsiteId] = useState("ST001");
 
+  /*
+    called when user changes qty.
+    calculates total price according to qty
+  */
   const onChangeQty = (qty) => {
     setquantity(qty);
     settotalPrice(qty * ratePrice);
@@ -46,9 +59,11 @@ function PlaceOrder({ route }) {
       axios
         .post(`http://${LOCALHOST}:8070/orders`, data)
         .then((res) => {
-          showAlert(
-            "This order will be sent to the management for the approval."
-          );
+          if (res.data.data.confirmation) {
+            showAlert("Successful!.");
+          } else {
+            showAlert("This order will be reviewed by the management.");
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -59,20 +74,29 @@ function PlaceOrder({ route }) {
     }
   };
 
+  //show alert box
   const showAlert = (msg) =>
     Alert.alert(
       "Place Order",
       msg,
       [
         {
+          text: "View Orders",
+          onPress: () => navigation.navigate("Orders"),
+        },
+        {
           text: "OK",
-          style: "ok",
         },
       ],
       {
         cancelable: true,
       }
     );
+
+  const clear = () => {
+    setquantity(0);
+    settotalPrice(0);
+  };
 
   useEffect(() => {
     setproductName(route.params.product.productName);
@@ -84,62 +108,81 @@ function PlaceOrder({ route }) {
 
   return (
     <View style={styles.container}>
-      <Text>Product Name</Text>
-      <TextInput
-        style={styles.input}
-        onChangeText={setproductName}
-        value={productName}
-        placeholder="Ex:- Cement"
-      />
-      <Text>Product ID</Text>
-      <TextInput
-        style={styles.input}
-        onChangeText={setproductId}
-        value={productId}
-        placeholder="Ex:- P001"
-      />
-      <Text>Supplier Name</Text>
-      <TextInput
-        style={styles.input}
-        onChangeText={setsupplierName}
-        value={supplierName}
-        placeholder="Ex:- Dammika Perera"
-      />
-      <Text>Quantity</Text>
-      <TextInput
-        style={styles.input}
-        onChangeText={(qty) => onChangeQty(qty)}
-        value={quantity.toString()}
-        placeholder="Ex:- 10"
-        keyboardType="numeric"
-      />
-      <Text>Rate Price</Text>
-      <TextInput
-        style={styles.input}
-        onChangeText={setratePrice}
-        value={ratePrice.toString()}
-        placeholder="Ex:- 10000"
-        keyboardType="numeric"
-      />
-      <Text>Total Price</Text>
-      <TextInput
-        style={styles.input}
-        onChangeText={settotalPrice}
-        value={totalPrice.toString()}
-        placeholder="Ex:- 20000"
-        keyboardType="numeric"
-      />
-      <Text>Site Name</Text>
-      <TextInput
-        style={styles.input}
-        onChangeText={setsiteName}
-        value={siteName}
-        placeholder="Ex:- Construction Site"
-      />
-      <View style={styles.actions}>
-        <Button title="Clear" onPress={() => showAlert("Success")} />
-        <Button title="Submit" onPress={() => submit()} />
-      </View>
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        <Text style={styles.inputLabel}>Product Name</Text>
+        <TextInput
+          style={styles.input}
+          onChangeText={setproductName}
+          value={productName}
+          placeholder="Ex:- Cement"
+          editable={false}
+          selectTextOnFocus={false}
+        />
+        <Text style={styles.inputLabel}>Product ID</Text>
+        <TextInput
+          style={styles.input}
+          onChangeText={setproductId}
+          value={productId}
+          placeholder="Ex:- P001"
+          editable={false}
+          selectTextOnFocus={false}
+        />
+        <Text style={styles.inputLabel}>Supplier Name</Text>
+        <TextInput
+          style={styles.input}
+          onChangeText={setsupplierName}
+          value={supplierName}
+          placeholder="Ex:- Dammika Perera"
+          editable={false}
+          selectTextOnFocus={false}
+        />
+        <Text style={styles.inputLabel}>Quantity</Text>
+        <TextInput
+          style={styles.input}
+          onChangeText={(qty) => onChangeQty(qty)}
+          value={quantity.toString()}
+          placeholder="Ex:- 10"
+          keyboardType="numeric"
+        />
+        <Text style={styles.inputLabel}>Rate Price</Text>
+        <TextInput
+          style={styles.input}
+          onChangeText={setratePrice}
+          value={ratePrice.toString()}
+          placeholder="Ex:- 10000"
+          keyboardType="numeric"
+          editable={false}
+          selectTextOnFocus={false}
+        />
+        <Text style={styles.inputLabel}>Total Price</Text>
+        <TextInput
+          style={styles.input}
+          onChangeText={settotalPrice}
+          value={totalPrice.toString()}
+          placeholder="Ex:- 20000"
+          keyboardType="numeric"
+          editable={false}
+          selectTextOnFocus={false}
+        />
+        <Text style={styles.inputLabel}>Site Name</Text>
+        <TextInput
+          style={styles.input}
+          onChangeText={setsiteName}
+          value={siteName}
+          placeholder="Ex:- Construction Site"
+          editable={false}
+          selectTextOnFocus={false}
+        />
+        <View style={styles.actions}>
+          <Pressable style={styles.buttonSecondary} onPress={() => clear()}>
+            <Text style={styles.buttonSecondaryText}>Clear</Text>
+          </Pressable>
+          <Pressable style={styles.buttonPrimary} onPress={() => submit()}>
+            <Text style={styles.buttonPrimaryText}>Submit</Text>
+          </Pressable>
+        </View>
+      </ScrollView>
+
       <StatusBar style="auto" />
     </View>
   );
@@ -147,21 +190,62 @@ function PlaceOrder({ route }) {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "#e0e0e0",
     flex: 1,
-    backgroundColor: "#fff",
     flexDirection: "column",
-    padding: 10,
+    padding: 0,
   },
   input: {
-    height: 40,
+    height: 50,
     marginTop: 5,
     marginBottom: 12,
     borderWidth: 1,
     padding: 10,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: "#fdd835",
+    backgroundColor: "#fff",
+    fontSize: 18,
   },
   actions: {
     flexDirection: "row",
     justifyContent: "center",
+  },
+  inputLabel: {
+    fontSize: 18,
+    fontWeight: "600",
+  },
+  scrollView: {
+    padding: 10,
+  },
+  buttonPrimary: {
+    backgroundColor: "#2d2d2d",
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderRadius: 5,
+  },
+  buttonPrimaryText: {
+    color: "#ffd54f",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  buttonSecondary: {
+    backgroundColor: "#bcbcbc",
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderRadius: 5,
+    marginRight: 10,
+    borderColor: "red",
+    borderWidth: 1,
+  },
+  buttonSecondaryText: {
+    color: "red",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
 
