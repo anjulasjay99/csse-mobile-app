@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { ScrollView, StyleSheet, Text, View, TextInput } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  RefreshControl,
+} from "react-native";
 import axios from "axios";
 import ProductCard from "../components/ProductCard";
 import { LOCALHOST } from "@env";
@@ -8,15 +15,19 @@ import { LOCALHOST } from "@env";
 function Products({ navigation }) {
   const [products, setproducts] = useState([]);
   const [searchText, setsearchText] = useState("");
+  const [refreshing, setrefreshing] = useState(false);
 
   const getProducts = () => {
+    setrefreshing(true);
     axios
       .get(`http://${LOCALHOST}:8070/products`)
       .then((res) => {
         setproducts(res.data.data);
+        setrefreshing(false);
       })
       .catch((err) => {
         console.log(err);
+        setrefreshing(false);
       });
   };
 
@@ -32,7 +43,12 @@ function Products({ navigation }) {
         value={searchText}
         onChangeText={setsearchText}
       />
-      <ScrollView contentContainerStyle={styles.scrollViewStyle}>
+      <ScrollView
+        contentContainerStyle={styles.scrollViewStyle}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={getProducts} />
+        }
+      >
         {products
           .filter((prd) => {
             if (prd !== "") {
@@ -66,8 +82,8 @@ function Products({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "#e0e0e0",
     flex: 1,
-    backgroundColor: "#fff",
     justifyContent: "center",
     flexDirection: "column",
     padding: 10,
@@ -79,8 +95,11 @@ const styles = StyleSheet.create({
     height: 40,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: "thistle",
+    borderRadius: 5,
+    borderColor: "#fdd835",
+    backgroundColor: "#fff",
     padding: 10,
+    color: "black",
   },
 });
 
