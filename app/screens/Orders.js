@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
-  Text,
   View,
   ScrollView,
   RefreshControl,
@@ -12,7 +11,7 @@ import {
 import { LOCALHOST } from "@env";
 import axios from "axios";
 import OrderCard from "../components/OrderCard";
-import * as SecureStore from "expo-secure-store";
+import User from "../models/User";
 
 function Orders() {
   const [orders, setorders] = useState([]);
@@ -51,24 +50,10 @@ function Orders() {
     );
   };
 
-  //check if user is logged in
-  const checkIfLoggedIn = async () => {
-    try {
-      const user = await SecureStore.getItemAsync("user_data");
-      if (user !== undefined) {
-        const data = JSON.parse(user);
-        setsiteId(data.siteId);
-        getOrders(data.siteId);
-      } else {
-        navigation.navigate("Login");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
-    checkIfLoggedIn();
+    const user = User.getUserInstance();
+    setsiteId(user.getSiteId());
+    getOrders(user.getSiteId());
   }, []);
 
   return (

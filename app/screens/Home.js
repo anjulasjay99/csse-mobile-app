@@ -1,15 +1,37 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Button, Pressable, Image } from "react-native";
+import { StyleSheet, Text, View, Pressable, Image, Alert } from "react-native";
+import * as SecureStore from "expo-secure-store";
+import User from "../models/User";
 
 function Home({ navigation }) {
+  const logout = () => {
+    SecureStore.deleteItemAsync("user_data");
+    User.destroy();
+    navigation.navigate("Login");
+  };
+
+  const confirmation = () => {
+    Alert.alert(
+      "Logout",
+      "Are you sure you want to logout?",
+      [
+        {
+          text: "Yes",
+          onPress: logout,
+        },
+        {
+          text: "No",
+        },
+      ],
+      {
+        cancelable: true,
+      }
+    );
+  };
   return (
     <View style={styles.container}>
-      {/* <Button
-        title="View Products"
-        onPress={() => navigation.navigate("Products")}
-      /> */}
-      <Text style={styles.heading}>Procurement Management</Text>
+      <Text style={styles.heading}>Site Manager</Text>
       <Pressable
         style={styles.tile}
         onPress={() => navigation.navigate("Products")}
@@ -20,16 +42,25 @@ function Home({ navigation }) {
         />
         <Text style={styles.tileText}>View Products</Text>
       </Pressable>
-      <Pressable
-        style={styles.tile}
-        onPress={() => navigation.navigate("Orders")}
-      >
-        <Image
-          style={styles.tileImage}
-          source={require("../assets/orders.png")}
-        />
-        <Text style={styles.tileText}>View Orders</Text>
-      </Pressable>
+      <View style={styles.rowContainer}>
+        <Pressable
+          style={styles.tile}
+          onPress={() => navigation.navigate("Orders")}
+        >
+          <Image
+            style={styles.tileImage}
+            source={require("../assets/orders.png")}
+          />
+          <Text style={styles.tileText}>View Orders</Text>
+        </Pressable>
+        <Pressable style={styles.tile} onPress={confirmation}>
+          <Image
+            style={styles.tileImage}
+            source={require("../assets/logout.png")}
+          />
+          <Text style={styles.tileText}>Logout</Text>
+        </Pressable>
+      </View>
 
       <StatusBar style="auto" />
     </View>
@@ -45,6 +76,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 10,
   },
+  rowContainer: {
+    width: "100%",
+    backgroundColor: "#e0e0e0",
+    flex: 0.5,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   tile: {
     flex: 0.5,
     width: "100%",
@@ -56,6 +94,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
+    marginHorizontal: 2,
   },
   tileText: {
     fontSize: 20,

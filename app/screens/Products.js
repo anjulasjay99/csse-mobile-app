@@ -3,7 +3,6 @@ import { StatusBar } from "expo-status-bar";
 import {
   ScrollView,
   StyleSheet,
-  Text,
   View,
   TextInput,
   RefreshControl,
@@ -17,6 +16,7 @@ function Products({ navigation }) {
   const [searchText, setsearchText] = useState("");
   const [refreshing, setrefreshing] = useState(false);
 
+  //fetch all available products
   const getProducts = () => {
     setrefreshing(true);
     axios
