@@ -5,14 +5,13 @@ import {
   Text,
   View,
   TextInput,
-  Button,
   Alert,
   ScrollView,
   Pressable,
 } from "react-native";
 import axios from "axios";
 import { LOCALHOST } from "@env";
-import * as SecureStore from "expo-secure-store";
+import User from "../models/User";
 
 function PlaceOrder({ navigation, route }) {
   const [productName, setproductName] = useState("");
@@ -99,24 +98,10 @@ function PlaceOrder({ navigation, route }) {
     settotalPrice(0);
   };
 
-  const checkIfLoggedIn = async () => {
-    try {
-      const user = await SecureStore.getItemAsync("user_data");
-      if (user !== undefined) {
-        const data = JSON.parse(user);
-        setsiteId(data.siteId);
-        setsiteName(data.siteName);
-      } else {
-        navigation.navigate("Login");
-      }
-    } catch (error) {
-      console.log(error);
-      showToast("Error! Please try again later.");
-    }
-  };
-
   useEffect(() => {
-    checkIfLoggedIn();
+    const user = User.getUserInstance();
+    setsiteId(user.getSiteId());
+    setsiteName(user.getSiteName());
     setproductName(route.params.product.productName);
     setproductId(route.params.product.productId);
     setsupplierId(route.params.product.supplierId);

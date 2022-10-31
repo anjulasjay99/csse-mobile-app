@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Button,
   TextInput,
   ToastAndroid,
   Pressable,
@@ -14,6 +13,7 @@ import axios from "axios";
 function OrderCard({ order }) {
   const [receivedQty, setreceivedQty] = useState(0);
 
+  //update delivery details
   const update = () => {
     axios
       .put(
@@ -31,6 +31,7 @@ function OrderCard({ order }) {
       });
   };
 
+  //show toast message
   const showToast = (msg) => {
     ToastAndroid.show(msg, ToastAndroid.SHORT);
   };

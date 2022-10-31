@@ -10,6 +10,7 @@ import {
 import axios from "axios";
 import { LOCALHOST } from "@env";
 import * as SecureStore from "expo-secure-store";
+import User from "../models/User";
 
 function Login({ navigation }) {
   const [email, setemail] = useState("");
@@ -26,7 +27,7 @@ function Login({ navigation }) {
         })
         .then(async (res) => {
           await storeUserData(res.data.userData);
-          navigation.navigate("Home");
+          navigation.navigate("HomeScreen");
         })
         .catch((err) => {
           console.log(err);
@@ -37,10 +38,17 @@ function Login({ navigation }) {
     }
   };
 
+  //store user details in secure store
   const storeUserData = async (data) => {
     try {
       const value = JSON.stringify(data);
       await SecureStore.setItemAsync("user_data", value);
+      const usr = User.getUserInstance();
+      usr.setFullName(data.fullName);
+      usr.setSiteId(data.siteId);
+      usr.setSiteName(data.siteName);
+      usr.setEmail(data.email);
+      usr.setPassword(data.password);
     } catch (error) {
       console.log(error);
       showToast("Error! Please try again later.");
@@ -52,18 +60,25 @@ function Login({ navigation }) {
     ToastAndroid.show(msg, ToastAndroid.LONG);
   };
 
+  //check if user is already logged in
   const checkIfLoggedIn = async () => {
     try {
       const user = await SecureStore.getItemAsync("user_data");
       if (user !== undefined) {
-        console.log("logged in", user);
-        navigation.navigate("Home");
+        const parsed = JSON.parse(user);
+        const usr = User.getUserInstance();
+        usr.setFullName(parsed.fullName);
+        usr.setSiteId(parsed.siteId);
+        usr.setSiteName(parsed.siteName);
+        usr.setEmail(parsed.email);
+        usr.setPassword(parsed.password);
+        navigation.navigate("HomeScreen");
       }
     } catch (error) {
       console.log(error);
-      showToast("Error! Please try again later.");
     }
   };
+
   useEffect(() => {
     checkIfLoggedIn();
   }, []);
