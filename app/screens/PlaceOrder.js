@@ -191,6 +191,7 @@ function PlaceOrder({ navigation, route }) {
   );
 }
 
+//styles for the component
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#e0e0e0",

@@ -1,6 +1,7 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Home from "../screens/Home";
 
+//create a drawer navigator
 const Drawer = createDrawerNavigator();
 
 export default function DrawerNavigator() {
