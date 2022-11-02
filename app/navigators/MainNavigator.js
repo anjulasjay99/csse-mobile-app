@@ -6,6 +6,7 @@ import Orders from "../screens/Orders";
 import Login from "../screens/Login";
 import DrawerNavigator from "./DrawerNavigator";
 
+//create a stack navigator
 const Stack = createNativeStackNavigator();
 
 export default function MainNavigator() {

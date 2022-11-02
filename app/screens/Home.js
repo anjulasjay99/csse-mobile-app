@@ -5,12 +5,14 @@ import * as SecureStore from "expo-secure-store";
 import User from "../models/User";
 
 function Home({ navigation }) {
+  //log out from the app
   const logout = () => {
     SecureStore.deleteItemAsync("user_data");
     User.destroy();
     navigation.navigate("Login");
   };
 
+  //confirm logout
   const confirmation = () => {
     Alert.alert(
       "Logout",
@@ -29,6 +31,7 @@ function Home({ navigation }) {
       }
     );
   };
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Site Manager</Text>
@@ -67,6 +70,7 @@ function Home({ navigation }) {
   );
 }
 
+//styles for the component
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#e0e0e0",
