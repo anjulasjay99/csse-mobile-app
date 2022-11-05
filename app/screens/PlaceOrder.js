@@ -8,6 +8,7 @@ import {
   Alert,
   ScrollView,
   Pressable,
+  TouchableNativeFeedback,
 } from "react-native";
 import axios from "axios";
 import { LOCALHOST } from "@env";
@@ -70,7 +71,7 @@ function PlaceOrder({ navigation, route }) {
           showAlert("Error!");
         });
     } else {
-      showAlert("Please fill all the details");
+      showError("Please fill all the details");
     }
   };
 
@@ -84,6 +85,21 @@ function PlaceOrder({ navigation, route }) {
           text: "View Orders",
           onPress: () => navigation.navigate("Orders"),
         },
+        {
+          text: "OK",
+        },
+      ],
+      {
+        cancelable: true,
+      }
+    );
+
+  //show error message
+  const showError = (msg) =>
+    Alert.alert(
+      "Place Order",
+      msg,
+      [
         {
           text: "OK",
         },
@@ -180,9 +196,11 @@ function PlaceOrder({ navigation, route }) {
           <Pressable style={styles.buttonSecondary} onPress={() => clear()}>
             <Text style={styles.buttonSecondaryText}>Clear</Text>
           </Pressable>
-          <Pressable style={styles.buttonPrimary} onPress={() => submit()}>
-            <Text style={styles.buttonPrimaryText}>Submit</Text>
-          </Pressable>
+          <TouchableNativeFeedback onPress={() => submit()}>
+            <View style={styles.buttonPrimary}>
+              <Text style={styles.buttonPrimaryText}>Submit</Text>
+            </View>
+          </TouchableNativeFeedback>
         </View>
       </ScrollView>
 

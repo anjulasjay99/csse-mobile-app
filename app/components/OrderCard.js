@@ -6,6 +6,7 @@ import {
   TextInput,
   ToastAndroid,
   Pressable,
+  TouchableNativeFeedback,
 } from "react-native";
 import { LOCALHOST } from "@env";
 import axios from "axios";
@@ -87,9 +88,14 @@ function OrderCard({ order }) {
         >
           <Text style={styles.buttonSecondaryText}>Reset</Text>
         </Pressable>
-        <Pressable style={styles.buttonPrimary} onPress={() => update()}>
-          <Text style={styles.buttonPrimaryText}>Update</Text>
-        </Pressable>
+        <TouchableNativeFeedback
+          onPress={() => update()}
+          disabled={order.orderStatus === "Approved" ? false : true}
+        >
+          <View style={styles.buttonPrimary}>
+            <Text style={styles.buttonPrimaryText}>Update</Text>
+          </View>
+        </TouchableNativeFeedback>
       </View>
     </View>
   );
