@@ -1,5 +1,11 @@
 import React from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  TouchableNativeFeedback,
+} from "react-native";
 
 function ProductCard({ navigation, product }) {
   return (
@@ -21,12 +27,14 @@ function ProductCard({ navigation, product }) {
         <Text style={styles.bodyText}>{product.supplierName}</Text>
       </View>
       <View style={styles.actions}>
-        <Pressable
+        <TouchableNativeFeedback
           style={styles.buttonPrimary}
           onPress={() => navigation.navigate("Place Order", { product })}
         >
-          <Text style={styles.buttonPrimaryText}>Select</Text>
-        </Pressable>
+          <View style={styles.buttonPrimary}>
+            <Text style={styles.buttonPrimaryText}>Select</Text>
+          </View>
+        </TouchableNativeFeedback>
       </View>
     </View>
   );
